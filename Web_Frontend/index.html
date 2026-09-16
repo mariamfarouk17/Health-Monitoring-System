@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Monitor Dashboard</title>
+
+  <!-- Fonts: monospace for digital-style readouts, sans-serif for labels -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main class="device-panel">
+
+    <!-- ===================== Status bar ===================== -->
+    <header class="status-bar">
+      <div class="device-name">HEALTH MONITOR</div>
+
+      <!-- STEP 5 will update this dot/text based on real WebSocket state -->
+      <div class="connection" id="connection-status" data-state="connected">
+        <span class="connection-dot"></span>
+        <span class="connection-label">Connected</span>
+      </div>
+    </header>
+
+    <!-- ===================== Hero: Heart Rate ===================== -->
+    <section class="hero-tile" aria-label="Heart rate">
+      <div class="hero-icon">
+        <svg viewBox="0 0 24 24" width="40" height="40" id="heart-icon">
+          <path d="M12 21s-6.7-4.3-9.3-8.2C0.9 9.9 1.8 6.4 4.6 5.1c2.2-1 4.6-0.2 5.9 1.6l1.5 2 1.5-2c1.3-1.8 3.7-2.6 5.9-1.6 2.8 1.3 3.7 4.8 1.9 7.7C18.7 16.7 12 21 12 21z"/>
+        </svg>
+      </div>
+      <div class="hero-readout">
+        <span class="hero-value" id="heart-rate">--</span>
+        <span class="hero-unit">BPM</span>
+      </div>
+      <div class="hero-label">Heart Rate</div>
+    </section>
+
+    <!-- ===================== Metric tiles ===================== -->
+    <section class="metric-grid">
+
+      <div class="metric-tile" aria-label="Steps">
+        <svg class="metric-icon" viewBox="0 0 24 24" width="26" height="26">
+          <path d="M8 3c-1.4 0-2.4 1.4-2 2.7l1 3.3-3 6c-.5 1.1.3 2.3 1.5 2.3.7 0 1.3-.4 1.6-1l2.4-5 2 1.5-1 4c-.3 1.1.6 2.2 1.7 2.2.9 0 1.6-.6 1.8-1.4l1.4-5.6c.2-1-.3-2-1.2-2.5l-2.6-1.5.6-2.4C13.5 4.5 12.3 3 10.7 3H8z"/>
+        </svg>
+        <div class="metric-value" id="steps">--</div>
+        <div class="metric-label">Steps</div>
+      </div>
+
+      <div class="metric-tile" aria-label="Distance">
+        <svg class="metric-icon" viewBox="0 0 24 24" width="26" height="26">
+          <path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"/>
+        </svg>
+        <div class="metric-value">
+          <span id="distance">--</span><span class="metric-unit"> km</span>
+        </div>
+        <div class="metric-label">Distance</div>
+      </div>
+
+      <div class="metric-tile" aria-label="Calories">
+        <svg class="metric-icon" viewBox="0 0 24 24" width="26" height="26">
+          <path d="M12 2s3 3.5 3 6.5c0 1.2-.5 2-1.1 2.7.9-.2 1.9-1 2.4-2.2C17.8 10.7 19 13 19 15c0 3.9-3.1 7-7 7s-7-3.1-7-7c0-3.5 2.3-5.9 3.6-8.8.4 1 .2 2 .9 2.9C9.9 5.7 12 4.3 12 2z"/>
+        </svg>
+        <div class="metric-value">
+          <span id="calories">--</span><span class="metric-unit"> kcal</span>
+        </div>
+        <div class="metric-label">Calories</div>
+      </div>
+
+    </section>
+
+    <!-- ===================== Battery gauge ===================== -->
+    <section class="battery-strip" aria-label="Battery level">
+      <div class="battery-label">Battery</div>
+
+      <div class="battery-gauge">
+        <div class="battery-fill" id="battery-fill"></div>
+      </div>
+      <div class="battery-nub"></div>
+
+      <div class="battery-value"><span id="battery">--</span>%</div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

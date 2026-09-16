@@ -1,0 +1,257 @@
+/* ===================== Design tokens ===================== */
+:root {
+  --bg-outer: #060c14;
+  --panel-bg: #0d1b2a;
+  --tile-bg: #13293d;
+  --tile-bg-hero: #14263a;
+  --border-soft: #1f3a52;
+
+  --text-primary: #eaf3fa;
+  --text-muted: #7f96ab;
+
+  --accent-heart: #ff6b81;
+  --accent-steps: #4fc3f7;
+  --accent-distance: #ffc15e;
+  --accent-calories: #ff8a5b;
+
+  --battery-good: #4cd97b;
+  --battery-mid: #ffc15e;
+  --battery-low: #ff5c5c;
+
+  --font-display: 'Share Tech Mono', monospace;
+  --font-body: 'IBM Plex Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-outer);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  padding: 24px;
+}
+
+/* ===================== Device panel shell ===================== */
+.device-panel {
+  width: 100%;
+  max-width: 560px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ===================== Status bar ===================== */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.device-name {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.connection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.connection-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+/* Connected state: green dot + brighter label.
+   STEP 5 will toggle data-state="disconnected" on real socket events. */
+.connection[data-state="connected"] .connection-dot {
+  background: var(--battery-good);
+  box-shadow: 0 0 6px var(--battery-good);
+}
+
+.connection[data-state="connected"] .connection-label {
+  color: var(--text-primary);
+}
+
+.connection[data-state="disconnected"] .connection-dot {
+  background: var(--battery-low);
+  box-shadow: 0 0 6px var(--battery-low);
+}
+
+/* ===================== Hero: Heart rate ===================== */
+.hero-tile {
+  background: var(--tile-bg-hero);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.hero-icon {
+  color: var(--accent-heart);
+  margin-bottom: 8px;
+  animation: pulse-beat 1.6s ease-in-out infinite;
+}
+
+.hero-icon svg {
+  fill: currentColor;
+}
+
+@keyframes pulse-beat {
+  0%, 100% { transform: scale(1); }
+  15%      { transform: scale(1.15); }
+  30%      { transform: scale(1); }
+}
+
+.hero-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.hero-value {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  color: var(--accent-heart);
+  text-shadow: 0 0 18px rgba(255, 107, 129, 0.45);
+}
+
+.hero-unit {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.hero-label {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ===================== Metric grid ===================== */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.metric-tile {
+  background: var(--tile-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.metric-tile:nth-child(1) .metric-icon { color: var(--accent-steps); }
+.metric-tile:nth-child(2) .metric-icon { color: var(--accent-distance); }
+.metric-tile:nth-child(3) .metric-icon { color: var(--accent-calories); }
+
+.metric-icon {
+  fill: currentColor;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-family: var(--font-display);
+  font-size: 24px;
+}
+
+.metric-unit {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.metric-label {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ===================== Battery strip ===================== */
+.battery-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--tile-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.battery-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 60px;
+}
+
+.battery-gauge {
+  flex: 1;
+  height: 18px;
+  border: 2px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 2px;
+  background: var(--panel-bg);
+}
+
+.battery-fill {
+  height: 100%;
+  width: 0%; /* set dynamically by script.js */
+  border-radius: 2px;
+  background: var(--battery-good);
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.battery-nub {
+  width: 4px;
+  height: 8px;
+  background: var(--border-soft);
+  border-radius: 0 2px 2px 0;
+  margin-left: -8px;
+}
+
+.battery-value {
+  font-family: var(--font-display);
+  font-size: 16px;
+  min-width: 46px;
+  text-align: right;
+}
+
+/* ===================== Responsive ===================== */
+@media (max-width: 480px) {
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-value {
+    font-size: 44px;
+  }
+}
