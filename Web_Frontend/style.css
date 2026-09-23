@@ -255,3 +255,128 @@ body {
     font-size: 44px;
   }
 }
+
+
+/* ===================== Status bar right group ===================== */
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ===================== Activity badge ===================== */
+.activity-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+/* Idle: default muted grey */
+.activity-badge[data-state="idle"] .activity-dot {
+  background: var(--text-muted);
+}
+
+/* Walking: blue, matches steps accent */
+.activity-badge[data-state="walking"] .activity-dot {
+  background: var(--accent-steps);
+  box-shadow: 0 0 6px var(--accent-steps);
+}
+
+.activity-badge[data-state="walking"] .activity-label {
+  color: var(--accent-steps);
+}
+
+/* Running: red/pink, matches heart-rate urgency accent */
+.activity-badge[data-state="running"] .activity-dot {
+  background: var(--accent-heart);
+  box-shadow: 0 0 6px var(--accent-heart);
+}
+
+.activity-badge[data-state="running"] .activity-label {
+  color: var(--accent-heart);
+}
+
+
+
+/* ===================== Hero row (Heart Rate + Steps) ===================== */
+.hero-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.hero-row .hero-tile {
+  margin-bottom: 0; /* was margin-bottom on the old single hero-tile rule */
+}
+
+/* ===================== Steps ring ===================== */
+.steps-ring-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+
+.steps-ring {
+  transform: rotate(-90deg); /* start progress from the top */
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--border-soft);
+  stroke-width: 10;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: var(--accent-steps);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 326.73; /* 2 * PI * r(52) */
+  stroke-dashoffset: 326.73; /* full offset = 0% filled, set by JS */
+  transition: stroke-dashoffset 0.5s ease;
+  filter: drop-shadow(0 0 6px rgba(79, 195, 247, 0.5));
+}
+
+.steps-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.steps-value {
+  font-size: 28px; /* slightly smaller than heart-rate hero to fit the ring */
+}
+
+.steps-goal-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Metric grid now only holds 2 tiles (Distance, Calories) */
+.metric-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.metric-tile:nth-child(1) .metric-icon { color: var(--accent-distance); }
+.metric-tile:nth-child(2) .metric-icon { color: var(--accent-calories); }
+
+/* ===================== Responsive ===================== */
+@media (max-width: 480px) {
+  .hero-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,26 +1,23 @@
 /**
  * script.js
  *
- * STEP 5: Replaces STEP 4's mock data with a real WebSocket connection
- * to the Python backend at ws://localhost:8765.
- *
- * updateDashboard(data) and updateBatteryGauge(percentage) are UNCHANGED
- * from STEP 4 — only the data source feeding them is different now.
+ * Real-time WebSocket connection to the Python backend at
+ * ws://localhost:8765. Now also handles the "activity_status" field
+ * (0 = idle, 1 = walking, 2 = running).
  */
 
-// ---------------------------------------------------------------
-// CONFIGURATION
-// ---------------------------------------------------------------
 const WEBSOCKET_URL = "ws://localhost:8765";
-const RECONNECT_DELAY_MS = 3000; // retry connecting every 3s if disconnected
+const RECONNECT_DELAY_MS = 3000;
+
+// Maps the numeric STM32 activity status to display info.
+const ACTIVITY_STATES = {
+  0: { state: "idle",    label: "Idle" },
+  1: { state: "walking", label: "Walking" },
+  2: { state: "running", label: "Running" },
+};
 
 let socket = null;
 
-/**
- * Writes a health-data object into the dashboard's DOM elements.
- * Same function as STEP 4 — now called from the WebSocket onmessage
- * handler instead of from mock data.
- */
 function updateDashboard(data) {
   document.getElementById("heart-rate").textContent = data.heart_rate;
   document.getElementById("steps").textContent = data.steps;
@@ -29,12 +26,10 @@ function updateDashboard(data) {
   document.getElementById("battery").textContent = data.battery;
 
   updateBatteryGauge(data.battery);
+  updateActivityStatus(data.activity_status);
+  updateStepsRing(data.steps); // NEW
 }
 
-/**
- * Updates the visual battery bar width and color based on percentage.
- * Unchanged from STEP 4.
- */
 function updateBatteryGauge(percentage) {
   const fillEl = document.getElementById("battery-fill");
 
@@ -52,9 +47,21 @@ function updateBatteryGauge(percentage) {
 }
 
 /**
- * Sets the connection status indicator.
- * STEP 5: now driven by real WebSocket onopen/onclose/onerror events.
+ * Updates the activity badge based on the numeric status (0/1/2).
+ * If the value is missing or unrecognized, falls back to "idle"
+ * instead of crashing, since older packets without STATUS= are
+ * still valid for the other fields.
  */
+function updateActivityStatus(activityStatus) {
+  const badgeEl = document.getElementById("activity-status");
+  const labelEl = badgeEl.querySelector(".activity-label");
+
+  const info = ACTIVITY_STATES[activityStatus] || ACTIVITY_STATES[0];
+
+  badgeEl.dataset.state = info.state;
+  labelEl.textContent = info.label;
+}
+
 function setConnectionStatus(isConnected) {
   const statusEl = document.getElementById("connection-status");
   const labelEl = statusEl.querySelector(".connection-label");
@@ -68,10 +75,6 @@ function setConnectionStatus(isConnected) {
   }
 }
 
-/**
- * Opens (or re-opens) the WebSocket connection to the Python backend
- * and wires up all the event handlers.
- */
 function connectWebSocket() {
   socket = new WebSocket(WEBSOCKET_URL);
 
@@ -86,7 +89,6 @@ function connectWebSocket() {
     try {
       data = JSON.parse(event.data);
     } catch (err) {
-      // Malformed JSON received - log and skip, do not crash the page
       console.warn("[WebSocket] Received malformed JSON, ignoring:", event.data);
       return;
     }
@@ -95,26 +97,30 @@ function connectWebSocket() {
   };
 
   socket.onerror = (event) => {
-    // Errors are usually followed by onclose, so the status update
-    // itself happens there. This just gives a clear console message.
     console.error("[WebSocket] Connection error:", event);
   };
 
   socket.onclose = () => {
     console.warn("[WebSocket] Disconnected from backend.");
     setConnectionStatus(false);
-
-    // Automatically try to reconnect after a short delay, so the
-    // dashboard recovers on its own once the backend is available again.
     setTimeout(connectWebSocket, RECONNECT_DELAY_MS);
   };
 }
 
-// ---------------------------------------------------------------
-// Start the connection once the page has loaded.
-// STEP 4's mock data and setInterval() demo loop have been removed.
-// ---------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-  setConnectionStatus(false); // starts as "Disconnected" until onopen fires
+  setConnectionStatus(false);
   connectWebSocket();
 });
+
+
+
+// Assumption: daily step goal not provided by backend, defaulting to 10,000.
+const DAILY_STEP_GOAL = 10000;
+const RING_CIRCUMFERENCE = 326.73; // 2 * PI * r(52), must match CSS
+
+function updateStepsRing(steps) {
+  const ringEl = document.getElementById("steps-ring-progress");
+  const percent = Math.max(0, Math.min(1, steps / DAILY_STEP_GOAL));
+  const offset = RING_CIRCUMFERENCE * (1 - percent);
+  ringEl.style.strokeDashoffset = offset;
+}
