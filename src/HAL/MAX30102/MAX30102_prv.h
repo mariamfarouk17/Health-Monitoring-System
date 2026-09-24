@@ -1,0 +1,36 @@
+/*
+ * MAX30102_prv.h
+ *
+ *  Created on: Sep 13, 2026
+ *      Author: HP
+ */
+
+#ifndef HAL_MAX30102_MAX30102_PRV_H_
+#define HAL_MAX30102_MAX30102_PRV_H_
+
+#define MAX30102_REG_PART_ID       0xFFU
+#define MAX30102_PART_ID_EXPECTED  0x15U
+
+/* MAX30102 Register Map */
+#define MAX30102_REG_INT_STATUS1      0x00U
+#define MAX30102_REG_INT_STATUS2      0x01U
+#define MAX30102_REG_INT_ENABLE1      0x02U
+#define MAX30102_REG_INT_ENABLE2      0x03U
+#define MAX30102_REG_FIFO_WR_PTR      0x04U
+#define MAX30102_REG_OVF_COUNTER      0x05U
+#define MAX30102_REG_FIFO_RD_PTR      0x06U
+#define MAX30102_REG_FIFO_DATA        0x07U
+#define MAX30102_REG_FIFO_CONFIG      0x08U
+#define MAX30102_REG_MODE_CONFIG      0x09U
+#define MAX30102_REG_SPO2_CONFIG      0x0AU
+#define MAX30102_REG_LED1_PA          0x0CU
+#define MAX30102_REG_LED2_PA          0x0DU
+#define MAX30102_REG_PART_ID          0xFFU
+
+/* Register Mask Definitions */
+#define MAX30102_INT_A_FULL_MASK      (1U << 7U)
+#define MAX30102_INT_PPG_RDY_MASK     (1U << 6U)
+#define MAX30102_MODE_RESET_MASK      (1U << 6U)
+#define MAX30102_PART_ID_EXPECTED     0x15U
+
+#endif /* HAL_MAX30102_MAX30102_PRV_H_ */
